@@ -24,6 +24,26 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Run tests
+    - name: Run tests with coverage
       run: |
-        pytest
+        pytest --cov=app --cov-report=xml --cov-report=term
+
+    - name: Build package
+      run: |
+        mkdir build
+        cp app.py build/
+        zip -r build.zip build
+
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: python-build
+        path: build.zip
+
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: coverage.xml
+
+
